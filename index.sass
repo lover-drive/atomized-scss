@@ -1,0 +1,53 @@
+@use 'sass:list'
+@use 'sass:map'
+@use 'sass:string'
+
+@mixin custom ($values, $property, $property-name: null, $directional: false, $selector-modifier: "", $one-word: false)
+	@if not $property-name
+		$property-name: $property
+
+	@if $directional
+		+custom($values, $property, $property-name, false, $selector-modifier)
+		@each $direction in left, right, top, bottom
+			+custom($values, $property + '-' + $direction, $property-name + '-' + $direction, false, $selector-modifier)
+		+custom($values, $property + '-top', $property-name + '-vertical', false, $selector-modifier)
+		+custom($values, $property + '-bottom', $property-name + '-vertical', false, $selector-modifier)
+		+custom($values, $property + '-left', $property-name + '-horizontal', false, $selector-modifier)
+		+custom($values, $property + '-right', $property-name + '-horizontal', false, $selector-modifier)
+	@else
+		@each $key, $value in $values
+			@if not $value
+				@if list.length($key) == 1
+					$value: $key
+				@else
+					$value: list.nth($key, 2)
+					$key: list.nth($key, 1)
+			$selector: "*[#{$property-name}='#{string.quote(test)}']"
+			@if $one-word
+				*[#{"" + $key}]#{$selector-modifier}
+					#{$property}: $value
+			@else
+				*[#{$property-name}="#{"" + $key}"]#{$selector-modifier}
+					#{$property}: $value
+
+@mixin atom($values, $property, $property-name)
+	+custom($values, $property, $property-name)
+
+@mixin quark($values, $property, $selector-modifier: "")
+	+custom($values, $property, $selector-modifier: $selector-modifier, $one-word: true)
+
+@mixin with-states ($values, $property, $property-name: null, $custom-names: (), $exclude: [])
+	@if not $property-name
+		$property-name: $property
+
+	+custom($values, $property, $property-name)
+	@each $state in hover, active, focus, disabled
+		@if not list.index($exclude, $state)
+			$custom-name: $state
+			@if map.has-key($custom-names, $state)
+				$custom-name: map.get($custom-names, $state)
+
+			+custom($values, $property, "#{$property-name}\\:#{$custom-name}", $selector-modifier: ":#{$state}")
+
+=directional ($values, $property, $property-name: null)
+	+custom($values, $property, $property-name, $directional: true)

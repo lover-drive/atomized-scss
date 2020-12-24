@@ -1,0 +1,23 @@
+{
+  "name": "atomized-scss",
+  "version": "1.1.1",
+  "description": "Mixins for SCSS and SASS to create simple atomic css rules.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "scss",
+    "atomic"
+  ],
+  "author": "lover-drive",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lover-drive/atomized-scss.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lover-drive/atomized-scss/issues"
+  },
+  "homepage": "https://github.com/lover-drive/atomized-scss#readme"
+}
